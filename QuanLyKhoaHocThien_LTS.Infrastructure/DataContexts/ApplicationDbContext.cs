@@ -22,7 +22,7 @@ namespace QuanLyKhoaHocThien_LTS.Infrastructure.DataContexts
 
         //    modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         //    //SeedRoles(modelBuilder);
-        //    AddcertificateType(modelBuilder);
+        //    //AddcertificateType(modelBuilder);
         //}
 
         ////private static void SeedRoles(ModelBuilder modelBuilder)

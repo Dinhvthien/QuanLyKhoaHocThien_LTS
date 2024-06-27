@@ -38,6 +38,13 @@ builder.Services.AddScoped<IBaseRespository<ConfirmEmail>, BaseRespository<Confi
 builder.Services.AddScoped<IBaseRespository<Course>, BaseRespository<Course>>();
 builder.Services.AddScoped<IBaseRespository<Certificate>, BaseRespository<Certificate>>();
 builder.Services.AddScoped<IBaseRespository<CertificateType>, BaseRespository<CertificateType>>();
+builder.Services.AddScoped<IBaseRespository<RegisterStudy>, BaseRespository<RegisterStudy>>();
+builder.Services.AddScoped<IBaseRespository<Notification>, BaseRespository<Notification>>();
+builder.Services.AddScoped<IBaseRespository<Subject>, BaseRespository<Subject>>();
+builder.Services.AddScoped<IBaseRespository<CourseSubject>, BaseRespository<CourseSubject>>();
+
+
+
 
 var emailConfig = builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
 builder.Services.AddSingleton(emailConfig);

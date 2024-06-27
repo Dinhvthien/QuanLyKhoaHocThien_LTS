@@ -27,5 +27,13 @@ namespace QuanLyKhoaHocApi.Controllers
             int Id = int.Parse(HttpContext.User.FindFirst("Id").Value);
             return Ok(await _courseService.AddCourseAsync(Id, request));
         }
+
+        [HttpPost("create-subject")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> CreateSubject([FromBody] Request_AddSubject request)
+        {
+            int Id = int.Parse(HttpContext.User.FindFirst("Id").Value);
+            return Ok(await _courseService.AddSubjectAsync(Id, request));
+        }
     }
 }

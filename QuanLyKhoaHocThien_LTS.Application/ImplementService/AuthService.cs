@@ -145,7 +145,18 @@ namespace QuanLyKhoaHocThien_LTS.Application.ImplementService
                 }
                 if (code.ExpiryTime < DateTime.Now)
                 {
-                    return "Thời gian xác nhận đã hết hạn";
+                    await _baseRespositoryConfirmEmail.DeleteAsync(code.Id);
+
+                    ConfirmEmail confirmEmail = new ConfirmEmail();
+                    confirmEmail.UserId = code.UserId;
+                    confirmEmail.ConfirmCode = GenerateCode();
+                    confirmEmail.ExpiryTime = DateTime.Now.AddMinutes(2);
+                    confirmEmail.IsConfirm = false;
+                    await _baseRespositoryConfirmEmail.CreateAsync(confirmEmail);
+                    var findUserEmail = await _baseRespository.GetByIdAsync(code.UserId);
+                    var message = new EmailMessage(new string[] { findUserEmail.Email }, "Nhận mã xác nhận tại đây: ", $"Mã xác nhận: {confirmEmail.ConfirmCode}");
+                    var responseMessage = _emailService.SendEmail(message);
+                    return "Thời gian xác nhận đã hết hạn! Mã xác nhận đã được gửi lại @@";
                 }
                 var User = await _baseRespository.GetAsync(x => x.Id == code.UserId);
                 User.UserStatus = Domain.UserStatus.Active;

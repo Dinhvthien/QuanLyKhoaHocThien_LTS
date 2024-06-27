@@ -13,6 +13,8 @@ namespace QuanLyKhoaHocThien_LTS.Application.InterfaceServices
     {
         Task<ResponseObject<DataResponseCourse>> AddCourseAsync(int userId, Request_AddCourse course);
         Task<ResponseObject<DataResponseSubject>> AddSubjectAsync(int userId, Request_AddSubject course);
+        Task<ResponseObject<DataResponseSubject>> AddSubjectDetailAsync(int userId, Request_AddSubject course);
+
 
     }
 }
