@@ -12,7 +12,7 @@
 
     public enum HomeworkStatus
     {
-
+        notdone, done, wrong, right
     }
 
     public enum ResultStatus

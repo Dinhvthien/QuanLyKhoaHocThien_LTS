@@ -8,7 +8,7 @@ using QuanLyKhoaHocThien_LTS.Application.Payloads.RequestModels;
 
 namespace QuanLyKhoaHocApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/khoahoc")]
     [ApiController]
     public class CourseController : ControllerBase
     {
@@ -34,6 +34,13 @@ namespace QuanLyKhoaHocApi.Controllers
         {
             int Id = int.Parse(HttpContext.User.FindFirst("Id").Value);
             return Ok(await _courseService.AddSubjectAsync(Id, request));
+        }
+        [HttpPost("create-subject-detail")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> CreateSubjectDetail([FromBody] Request_AddSubjectDetail request)
+        {
+            int Id = int.Parse(HttpContext.User.FindFirst("Id").Value);
+            return Ok(await _courseService.AddSubjectDetailAsync(Id, request));
         }
     }
 }

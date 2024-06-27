@@ -23,6 +23,8 @@ namespace QuanLyKhoaHocThien_LTS.Application.ImplementService
         private readonly IBaseRespository<Notification> _baseNotificationRespository;
         private readonly IBaseRespository<Subject> _baseSubjectRespository;
         private readonly IBaseRespository<CourseSubject> _baseCourseSubjectRespository;
+        private readonly IBaseRespository<SubjectDetail> _baseSubjectDetailRespository;
+
         private readonly CourseConverter _courseConverter;
 
 
@@ -34,7 +36,8 @@ namespace QuanLyKhoaHocThien_LTS.Application.ImplementService
             IBaseRespository<RegisterStudy> baseRegisterStudyTypeRespository,
             IBaseRespository<Notification> baseNotificationRespository,
             IBaseRespository<Subject> baseSubjectRespository,
-            IBaseRespository<CourseSubject> baseCourseSubjectRespository
+            IBaseRespository<CourseSubject> baseCourseSubjectRespository,
+            IBaseRespository<SubjectDetail> baseCourseSubjectDetailRespository
             )
         {
             _baseRespository = baseRespository;
@@ -46,6 +49,7 @@ namespace QuanLyKhoaHocThien_LTS.Application.ImplementService
             _baseNotificationRespository = baseNotificationRespository;
             _baseSubjectRespository = baseSubjectRespository;
             _baseCourseSubjectRespository = baseCourseSubjectRespository;
+            _baseSubjectDetailRespository = baseCourseSubjectDetailRespository;
         }
         public async Task<ResponseObject<DataResponseCourse>> AddCourseAsync(int userId, Request_AddCourse course)
         {
@@ -145,12 +149,43 @@ namespace QuanLyKhoaHocThien_LTS.Application.ImplementService
             }
             catch (Exception ex)
             {
-
                 return new ResponseObject<DataResponseSubject>(400, ex.Message, null);
-
             }
         }
 
-
+        public async Task<ResponseObject<DataResponseSubjectDetail>> AddSubjectDetailAsync(int userId, Request_AddSubjectDetail course)
+        {
+            try
+            {
+                var findCourse = await _baseCourseRespository.GetByIdAsync(course.CourseId);
+                if (findCourse == null)
+                {
+                    return new ResponseObject<DataResponseSubjectDetail>(400, "Khóa học không tồn tại", null);
+                }
+                if (findCourse.CreatorId != userId)
+                {
+                    return new ResponseObject<DataResponseSubjectDetail>(400, "Bạn không phải người tạo khóa học", null);
+                }
+                var NewSubjectDetail = new SubjectDetail();
+                NewSubjectDetail.SubjectId = course.SubjectId;
+                NewSubjectDetail.IsFinished = false;
+                NewSubjectDetail.IsActive = true;
+                NewSubjectDetail.Name = course.Name;
+                NewSubjectDetail.LinkVideo = course.LinkVideo;
+                await _baseSubjectDetailRespository.CreateAsync(NewSubjectDetail);
+                DataResponseSubjectDetail dataResponseSubjectDetail = new DataResponseSubjectDetail();
+                dataResponseSubjectDetail.Id = NewSubjectDetail.Id;
+                dataResponseSubjectDetail.IsFinished = NewSubjectDetail.IsFinished;
+                dataResponseSubjectDetail.IsActive = NewSubjectDetail.IsActive;
+                dataResponseSubjectDetail.Name = NewSubjectDetail.Name;
+                dataResponseSubjectDetail.LinkVideo = NewSubjectDetail.LinkVideo;
+                dataResponseSubjectDetail.SubjectId = NewSubjectDetail.SubjectId;
+                return new ResponseObject<DataResponseSubjectDetail>(200,"Bài học đã được thêm vào khóa học thành công", dataResponseSubjectDetail);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseObject<DataResponseSubjectDetail>(400, ex.Message, null);
+            }
+        }
     }
 }

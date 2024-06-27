@@ -42,14 +42,35 @@ builder.Services.AddScoped<IBaseRespository<RegisterStudy>, BaseRespository<Regi
 builder.Services.AddScoped<IBaseRespository<Notification>, BaseRespository<Notification>>();
 builder.Services.AddScoped<IBaseRespository<Subject>, BaseRespository<Subject>>();
 builder.Services.AddScoped<IBaseRespository<CourseSubject>, BaseRespository<CourseSubject>>();
+builder.Services.AddScoped<IBaseRespository<SubjectDetail>, BaseRespository<SubjectDetail>>();
+builder.Services.AddScoped<IBaseRespository<Practice>, BaseRespository<Practice>>();
+builder.Services.AddScoped<IBaseRespository<DoHomework>, BaseRespository<DoHomework>>();
+builder.Services.AddScoped<IBaseRespository<Blog>, BaseRespository<Blog>>();
+builder.Services.AddScoped<IBaseRespository<CommentBlog>, BaseRespository<CommentBlog>>();
 
 
+
+builder.Services.AddScoped<IRegisterStudyService,RegisterStudyService>();
+builder.Services.AddScoped<IRegisterStudyRepository, RegisterStudyRepository>();
+builder.Services.AddScoped<ICertificateService, CertificateService>();
+builder.Services.AddScoped<ICertificateTypeServcie, CertificateTypeService>();
+builder.Services.AddScoped<IPracticeServcie, PracticeService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
+
+
+
+
+builder.Services.AddHttpClient();
 
 
 var emailConfig = builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
 builder.Services.AddSingleton(emailConfig);
 builder.Services.AddScoped<UserConverter>();
 builder.Services.AddScoped<CourseConverter>();
+builder.Services.AddScoped<PracticeConverter>();
+builder.Services.AddScoped<BlogConverter>();
+
+
 
 
 builder.Services.AddAuthentication(options =>

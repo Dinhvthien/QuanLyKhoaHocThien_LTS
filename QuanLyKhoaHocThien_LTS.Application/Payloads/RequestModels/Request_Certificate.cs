@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 
 namespace QuanLyKhoaHocThien_LTS.Application.Payloads.RequestModels
 {
-    public class Request_AddSubjectDetail
+    public class Request_Certificate
     {
-        public int SubjectId { get; set; }
-        public int CourseId { get; set; }
+        public int CertificateTypeId { get; set; }
+
         public string Name { get; set; } = default!;
-        public string LinkVideo { get; set; } = default!;
+
+        public string Description { get; set; } = default!;
+
+        public string Image { get; set; } = default!;
     }
 }

@@ -7,7 +7,7 @@ using QuanLyKhoaHocThien_LTS.Application.Payloads.RequestModels;
 
 namespace QuanLyKhoaHocApi.Controllers
 {
-    [Route("api/auth")]
+    [Route("api/user")]
     [ApiController]
     public class AuthController : ControllerBase
     {
