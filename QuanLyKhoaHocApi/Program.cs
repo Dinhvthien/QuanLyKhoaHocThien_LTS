@@ -49,6 +49,11 @@ builder.Services.AddScoped<IBaseRespository<Blog>, BaseRespository<Blog>>();
 builder.Services.AddScoped<IBaseRespository<LikeBlog>, BaseRespository<LikeBlog>>();
 builder.Services.AddScoped<IBaseRespository<CommentBlog>, BaseRespository<CommentBlog>>();
 builder.Services.AddScoped<IBaseRespository<MakeQuestion>, BaseRespository<MakeQuestion>>();
+builder.Services.AddScoped<IBaseRespository<Answers>, BaseRespository<Answers>>();
+builder.Services.AddScoped<IBaseRespository<Bill>, BaseRespository<Bill>>();
+builder.Services.AddScoped<IBaseRespository<BillStatus>, BaseRespository<BillStatus>>();
+
+
 
 
 
@@ -61,6 +66,10 @@ builder.Services.AddScoped<IPracticeServcie, PracticeService>();
 builder.Services.AddScoped<ILikeBlogService, LikeBlogService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IMakeQuestionService, MakeQuestionService>();
+builder.Services.AddScoped<IAnswersService, AnswersService>();
+builder.Services.AddScoped<IStudentProgressService, StudentProgressService>();
+
+
 
 
 

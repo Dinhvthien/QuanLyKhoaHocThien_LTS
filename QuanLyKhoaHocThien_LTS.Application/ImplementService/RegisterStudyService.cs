@@ -1,4 +1,5 @@
-﻿using QuanLyKhoaHocThien_LTS.Application.InterfaceServices;
+﻿using Microsoft.EntityFrameworkCore;
+using QuanLyKhoaHocThien_LTS.Application.InterfaceServices;
 using QuanLyKhoaHocThien_LTS.Application.Payloads.RequestModels;
 using QuanLyKhoaHocThien_LTS.Domain.Entities;
 using QuanLyKhoaHocThien_LTS.Domain.IRespositories;
@@ -18,6 +19,10 @@ namespace QuanLyKhoaHocThien_LTS.Application.ImplementService
         private readonly IBaseRespository<Subject> _baseSubectRespository;
         private readonly IBaseRespository<SubjectDetail> _baseSubectDetailRespository;
         private readonly IBaseRespository<DoHomework> _baseDoHomeworkRespository;
+        private readonly IBaseRespository<Bill> _baseBillRespository;
+        private readonly IBaseRespository<BillStatus> _baseBillStatusRespository;
+
+
 
 
 
@@ -25,7 +30,9 @@ namespace QuanLyKhoaHocThien_LTS.Application.ImplementService
             IBaseRespository<Course> baseCourseRespository,
             IBaseRespository<Subject> baseSubectRespository,
             IBaseRespository<SubjectDetail> baseSubectDetailRespository,
-            IBaseRespository<DoHomework> baseDoHomeworkRespository
+            IBaseRespository<DoHomework> baseDoHomeworkRespository,
+            IBaseRespository<Bill> baseBillRespository,
+            IBaseRespository<BillStatus> baseBillStatusRespository
             )
         {
             _baseRegisterStudyRespository = baseRegisterStudyRespository;
@@ -33,6 +40,35 @@ namespace QuanLyKhoaHocThien_LTS.Application.ImplementService
             _baseSubectRespository = baseSubectRespository;
             _baseSubectDetailRespository = baseSubectDetailRespository;
             _baseDoHomeworkRespository = baseDoHomeworkRespository;
+            _baseBillRespository = baseBillRespository;
+            _baseBillStatusRespository = baseBillStatusRespository;
+        }
+        private string GenerateTradingCode()
+        {
+            return Guid.NewGuid().ToString();
+        }
+
+        private async Task<int> GetBillStatusId(string statusName)
+        {
+            var billStatus = await _baseBillStatusRespository.GetAsync(bs => bs.Name.Contains(statusName));
+            
+            return billStatus != null ? billStatus.Id : 0;
+        }
+
+        private async Task<int> CreateBillAsync(int userId, int courseId, decimal price, string tradingCode, int billStatusId)
+        {
+            var bill = new Bill
+            {
+                UserId = userId,
+                CourseId = courseId,
+                Price = price,
+                TradingCode = tradingCode,
+                CreateTime = DateTime.UtcNow,
+                BillStatusId = billStatusId
+            };
+
+            await _baseBillRespository.CreateAsync(bill);
+            return bill.Id; // Trả về Id của hóa đơn vừa được tạo
         }
         public async Task<string> RegisterStudy(int userId, Request_RegisterStudy RgisStudy)
         {
@@ -46,26 +82,14 @@ namespace QuanLyKhoaHocThien_LTS.Application.ImplementService
                 newRegisterStudy.RegisterTime = DateTime.Now;
                 newRegisterStudy.CurrentSubjectId = RgisStudy.CurrentSubjectId;
                 newRegisterStudy.IsFinished = false;
-                newRegisterStudy.IsActive = true;
+                newRegisterStudy.IsActive = false;
                 newRegisterStudy.PercentComplete = 0;
                 await _baseRegisterStudyRespository.CreateAsync(newRegisterStudy);
-
-                //var findAllSubject = await _baseSubectRespository.GetAsync(x => x.Id == RgisStudy.CurrentSubjectId);
-                //var findAllSubjectDetail = await _baseSubectDetailRespository.GetAllAsync(c=>c.SubjectId == findAllSubject.Id);
-                //foreach (var item in findAllSubjectDetail)
-                //{
-                //    var DoHomework = new DoHomework
-                //    {
-                //        UserId = userId,
-                //        HomeworkStatus = Domain.HomeworkStatus.notdone,
-                //        PracticeId = item.Id,
-                //        ActualOutput = "",
-                //        IsFinished = false,
-                //        RegisterStudyId = newRegisterStudy.Id,
-                //    };
-                //    await _baseDoHomeworkRespository.CreateAsync(DoHomework);
-                //}
-
+                decimal price = (await _baseCourseRespository.GetAsync(c => c.Id == RgisStudy.CourseId))?.Price ?? 0;
+                // Lấy giá khóa học từ cơ sở dữ liệu
+                var tradingCode = GenerateTradingCode();
+                var billStatusId = await GetBillStatusId("Chưa thanh toán");
+                await CreateBillAsync(userId, RgisStudy.CourseId, price, tradingCode, billStatusId);
                 return "url";
             }
             catch (Exception ex)
