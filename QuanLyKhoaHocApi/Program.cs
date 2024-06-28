@@ -49,8 +49,6 @@ builder.Services.AddScoped<IBaseRespository<Blog>, BaseRespository<Blog>>();
 builder.Services.AddScoped<IBaseRespository<CommentBlog>, BaseRespository<CommentBlog>>();
 builder.Services.AddScoped<IBaseRespository<Answers>, BaseRespository<Answers>>();
 
-
-
 builder.Services.AddScoped<IRegisterStudyService,RegisterStudyService>();
 builder.Services.AddScoped<IRegisterStudyRepository, RegisterStudyRepository>();
 builder.Services.AddScoped<ICertificateService, CertificateService>();
