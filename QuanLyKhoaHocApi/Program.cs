@@ -47,6 +47,7 @@ builder.Services.AddScoped<IBaseRespository<Practice>, BaseRespository<Practice>
 builder.Services.AddScoped<IBaseRespository<DoHomework>, BaseRespository<DoHomework>>();
 builder.Services.AddScoped<IBaseRespository<Blog>, BaseRespository<Blog>>();
 builder.Services.AddScoped<IBaseRespository<CommentBlog>, BaseRespository<CommentBlog>>();
+builder.Services.AddScoped<IBaseRespository<Answers>, BaseRespository<Answers>>();
 
 
 
@@ -56,6 +57,9 @@ builder.Services.AddScoped<ICertificateService, CertificateService>();
 builder.Services.AddScoped<ICertificateTypeServcie, CertificateTypeService>();
 builder.Services.AddScoped<IPracticeServcie, PracticeService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IAnswersService, AnswersService>();
+
+
 
 
 
